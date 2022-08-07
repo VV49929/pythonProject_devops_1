@@ -1,4 +1,6 @@
 import json
+import os
+import signal
 
 from flask import Flask, request
 from db_connector import get_user_by_id,add_user_to_table,update_user_name,delete_user_by_id,get_first_free_id
@@ -60,7 +62,10 @@ def user_v2(user_id):
             rc = add_user_to_table(user_name, free_id)
             return '{“status”: “ok”, “user_added”: "'+ user_name +' ID: '+free_id+'}', 200
 
-
+@app.route('/stop_server')
+def stop_server():
+ os.kill(os.getpid(), signal.CTRL_C_EVENT)
+ return 'Server stopped'
 
 
 app.run(host='127.0.0.1', debug=True, port=5000)
